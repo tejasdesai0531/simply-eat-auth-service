@@ -1,1 +1,1 @@
-# simply-eat-auth-service
+# simply-eat-admin-service

@@ -1,0 +1,45 @@
+{
+  "name": "simply-eat-admin-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "jest --watchAll --no-cache"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejasdesai0531/simply-eat-admin-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tejasdesai0531/simply-eat-admin-service/issues"
+  },
+  "homepage": "https://github.com/tejasdesai0531/simply-eat-admin-service#readme",
+  "dependencies": {
+    "@simply-eat/common": "^2.0.14",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.3",
+    "joi": "^17.8.3",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.9.1",
+    "node-nats-streaming": "^0.3.2",
+    "validatorjs": "^3.22.1",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.4.2",
+    "mongodb-memory-server": "^8.11.4",
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
+  }
+}

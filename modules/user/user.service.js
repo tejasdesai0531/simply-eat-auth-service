@@ -3,6 +3,9 @@ let User = require('../../models/user.model');
 
 let { genPassword, validPassword } = require('../../util/passwordUtils')
 const jwt = require('jsonwebtoken');
+const responses = require("./user.responses");
+const responseHandler = new (require('../../util/baseResponse'))(responses);
+
 
 module.exports = class userService {
 
@@ -11,7 +14,7 @@ module.exports = class userService {
     }
 
     async signUp(formData) {
-        // check if email mobile_no and user_name doesn't exists 
+
         let isEmailExists = User.find({ email: formData.email });
         let isUsernameExists = User.find({ username: formData.username });
         let isMobilenoExists = User.find({ mobile_no: formData.mobile_no });
@@ -39,37 +42,60 @@ module.exports = class userService {
         })
 
         if (isCredExistsError.length > 0) {
-            returnResponse = {
-                status: false,
-                value: isCredExistsError
-            }
-            return res.json(returnResponse);
+            return responseHandler.failure("credentail_exist", "credentail_exist");
         }
 
-        // hash the password 
+        // check if the email is verified or not. 
+        
         let hashedPassword = genPassword(formData.password);
-
-        //save the user
         formData.password = hashedPassword;
         delete formData.password_confirmation;
 
         try {
             await new User(formData).save();
-            returnResponse = {
-                status: true,
-                message: "user created successfully"
-            }
-
+            return responseHandler.success("user_created");
         }
         catch (error) {
-            console.log(error);
+            return responseHandler.failure("user_created_failed");
         }
 
     }
 
 
-    async logIn() {
+    async logIn(formData) {
+
+        let user = await User.find({ email: formData.email });
+        if (user.length == 0) {
+            return responseHandler.failure("email_donst_exists");
+        }
+        // check if formData.password and confirmPassword exists 
+        let isPasswordCorrect = validPassword(formData.password, user[0].password);
+        if (!isPasswordCorrect) {
+            return responseHandler.failure("password_not_matched");
+        }
+        // creating user data and token and sending them. 
+        const payload = {
+            id: user[0]._id,
+            username: user[0].username,
+            email: user[0].email,
+            role_type: user[0].role_type,
+            status: user[0].status
+        }
+
+        
+        const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${60 * 60 * 24 * 2}s` });
+        delete user[0]._doc.password;
+        return responseHandler.success("user_loggedIn_success", {
+            token: token,
+            userData: {
+                ...user[0]._doc
+            }
+        })
+
 
     }
-
 }
+
+
+
+

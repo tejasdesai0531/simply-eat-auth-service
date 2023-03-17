@@ -1,4 +1,4 @@
-class responseHandler {
+module.exports = class responseHandler {
 
     /**
      * @param {*} moduleResponsesError  [{

@@ -2,6 +2,7 @@ const Validator = require('validatorjs');
 let User = require('../../models/user.model');
 let { genPassword, validPassword } = require('../../util/passwordUtils')
 const jwt = require('jsonwebtoken');
+// const userService = new (require("./user.service"))();
 
 module.exports = class userController {
     constructor() {
@@ -37,6 +38,7 @@ module.exports = class userController {
 
         let validation = new Validator(formData, rules);
         if (validation.passes() && !validation.fails()) {
+
             // check if email mobile_no and user_name doesn't exists 
 
             let isEmailExists = User.find({ email: formData.email });
